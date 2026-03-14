@@ -1,0 +1,66 @@
+{
+  "alerts": [
+    {
+      "title": "JWT Token Validation Failure",
+      "severity": "critical",
+      "description": "401 Unauthorized errors spiking on /api/v2/orders. 35% of requests affected.",
+      "offset_minutes": -25
+    },
+    {
+      "title": "API Gateway → Payment-Service 503 Errors",
+      "severity": "critical",
+      "description": "Upstream connection timeout. Payment-Service pod memory at 95%, connection pool saturated.",
+      "offset_minutes": -12
+    },
+    {
+      "title": "High CPU Usage on db-node-01",
+      "severity": "warning",
+      "description": "CPU usage on db-node-01 exceeded 85% for 15 minutes.",
+      "offset_minutes": -60
+    }
+  ],
+  "metrics": [
+    { "name": "API Latency (p99)", "value": 120, "unit": "ms" },
+    { "name": "Database Connections", "value": 3450, "unit": "conns" },
+    { "name": "Error Rate (5xx)", "value": 4.2, "unit": "%" },
+    { "name": "Pod Restart Count (24h)", "value": 3, "unit": "restarts" }
+  ],
+  "knowledge_base": [
+    {
+      "incident_id": "INC-2099",
+      "sre_experience": "Payment Gateway timeout was causing cascade failures. We rolled back PR #4910 and reverted timeout to 500ms.",
+      "solution_applied": "Rollback PR #4910, revert payment timeout config.",
+      "offset_days": -2
+    },
+    {
+      "incident_id": "INC-1847",
+      "sre_experience": "Redis connection leak caused OOM on payment pods. Fixed by closing idle connections after 30s.",
+      "solution_applied": "Updated Redis pool config: IDLE_TIMEOUT=30s, MAX_CONNECTIONS=100.",
+      "offset_days": -5
+    },
+    {
+      "incident_id": "INC-1622",
+      "sre_experience": "JWT key rotation broke auth for 20 min. Root cause: key cache TTL was 24h. Changed to 5m.",
+      "solution_applied": "Reduced JWT key cache TTL to 5m, added /admin/flush-keys endpoint.",
+      "offset_days": -10
+    }
+  ],
+  "past_sessions": [
+    {
+      "title": "JWT Token Investigation",
+      "offset_hours": -3,
+      "messages": [
+        { "sender": "user", "text": "JWT Token Expiry Issue Detected" },
+        { "sender": "agent", "text": "I detected a JWT token validation failure impacting 35% of API requests. Traced to stale signing key cache.", "action_type": "show_next_gen_workflow" }
+      ]
+    },
+    {
+      "title": "KB Recommendation Review",
+      "offset_hours": -2,
+      "messages": [
+        { "sender": "user", "text": "Show Recommendation from Knowledge Base" },
+        { "sender": "agent", "text": "Based on the active DB CPU issue, I have generated a step-by-step remediation recommendation.", "action_type": "show_recommendation" }
+      ]
+    }
+  ]
+}
