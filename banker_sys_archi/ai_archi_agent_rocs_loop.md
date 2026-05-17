@@ -33,7 +33,7 @@ continuously hydrated
 semantically indexed
 optimized for sub-second inference
        
-2. High-Level Architecture
+      2. High-Level Architecture
 
        ┌──────────────────────────────────────────────────────────────────────────────┐
        │                         BANKER EXPERIENCE LAYER                             │
@@ -73,7 +73,7 @@ optimized for sub-second inference
        │                                    │
        ▼                                    ▼
     
-    ═══════════════════════ FAST PATH ══════════════════════════════════════════════
+        ═══════════════════════ FAST PATH ══════════════════════════════════════════════
     
     ┌──────────────────────────────────────────────────────────────────────────────┐
     │                UNIFIED BANKER CONTEXT LAYER (UBCL)                          │
